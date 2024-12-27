@@ -428,13 +428,9 @@ Optional client-specific config
 
 > `optional` **teamMemberInterestKeywords**: `string`[]
 
-### clientConfig.telegram.disableParseMode?
-
-> `optional` **disableParseMode**: `boolean`
-
 ### clientConfig.telegram.parseMode?
 
-> `optional` **parseMode**: `"Markdown" | "MarkdownV2" | "HTML"`
+> `optional` **parseMode**: `"Markdown" | "MarkdownV2" | "HTML" | null`
 
 ### clientConfig.slack?
 
@@ -447,6 +443,24 @@ Optional client-specific config
 ### clientConfig.slack.shouldIgnoreDirectMessages?
 
 > `optional` **shouldIgnoreDirectMessages**: `boolean`
+
+### clientConfig.twitter?
+
+> `optional` **twitter**: `object`
+
+### clientConfig.twitter.enableSearch?
+
+> `optional` **enableSearch**: `boolean`
+
+<<<<<<< HEAD
+### clientConfig.twitter.enableSearchResponse?
+
+> `optional` **enableSearchResponse**: `boolean`
+=======
+### clientConfig.twitter.enableSearchReply?
+
+> `optional` **enableSearchReply**: `boolean`
+>>>>>>> twitter
 
 ### style
 

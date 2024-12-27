@@ -10,11 +10,11 @@ class TwitterManager {
     post: TwitterPostClient;
     search: TwitterSearchClient;
     interaction: TwitterInteractionClient;
-    constructor(runtime: IAgentRuntime, enableSearch: boolean) {
+    constructor(runtime: IAgentRuntime) {
         this.client = new ClientBase(runtime);
         this.post = new TwitterPostClient(this.client, runtime);
 
-        if (enableSearch) {
+        if (runtime.character.clientConfig.twitter.enableSearch) {
             // this searches topics from character file
             elizaLogger.warn("Twitter/X client running in a mode that:");
             elizaLogger.warn("1. violates consent of random users");
@@ -34,7 +34,7 @@ export const TwitterClientInterface: Client = {
 
         elizaLogger.log("Twitter client started");
 
-        const manager = new TwitterManager(runtime, runtime.getSetting("TWITTER_SEARCH_ENABLE").toLowerCase() === "true");
+        const manager = new TwitterManager(runtime);
 
         await manager.client.init();
 

@@ -778,12 +778,15 @@ export type Character = {
             teamAgentIds?: string[];
             teamLeaderId?: string;
             teamMemberInterestKeywords?: string[];
-            disableParseMode?: boolean;
-            parseMode?: "Markdown" | "MarkdownV2" | "HTML";
+            parseMode?: "Markdown" | "MarkdownV2" | "HTML" | null;
         };
         slack?: {
             shouldIgnoreBotMessages?: boolean;
             shouldIgnoreDirectMessages?: boolean;
+        };
+        twitter?: {
+            enableSearch?: boolean;
+            enableSearchReply?: boolean;
         };
     };
 
