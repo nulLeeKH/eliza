@@ -448,6 +448,18 @@ Optional client-specific config
 
 > `optional` **shouldIgnoreDirectMessages**: `boolean`
 
+### clientConfig.twitter?
+
+> `optional` **twitter**: `object`
+
+### clientConfig.twitter.enableSearch?
+
+> `optional` **enableSearch**: `boolean`
+
+### clientConfig.twitter.enableSearchReply?
+
+> `optional` **enableSearchReply**: `boolean`
+
 ### style
 
 > **style**: `object`

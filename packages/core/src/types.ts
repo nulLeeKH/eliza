@@ -785,6 +785,10 @@ export type Character = {
             shouldIgnoreBotMessages?: boolean;
             shouldIgnoreDirectMessages?: boolean;
         };
+        twitter?: {
+            enableSearch?: boolean;
+            enableSearchReply?: boolean;
+        };
     };
 
     /** Writing style guides */

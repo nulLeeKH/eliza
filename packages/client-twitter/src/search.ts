@@ -248,76 +248,78 @@ export class TwitterSearchClient {
 
             await this.client.saveRequestMessage(message, state as State);
 
-            const context = composeContext({
-                state,
-                template:
-                    this.runtime.character.templates?.twitterSearchTemplate ||
-                    twitterSearchTemplate,
-            });
+            if (this.runtime.character.clientConfig.twitter.enableSearchReply) {
+                const context = composeContext({
+                    state,
+                    template:
+                        this.runtime.character.templates?.twitterSearchTemplate ||
+                        twitterSearchTemplate,
+                });
 
-            const responseContent = await generateMessageResponse({
-                runtime: this.runtime,
-                context,
-                modelClass: ModelClass.LARGE,
-            });
+                const responseContent = await generateMessageResponse({
+                    runtime: this.runtime,
+                    context,
+                    modelClass: ModelClass.LARGE,
+                });
 
-            responseContent.inReplyTo = message.id;
+                responseContent.inReplyTo = message.id;
 
-            const response = responseContent;
+                const response = responseContent;
 
-            if (!response.text) {
-                console.log("Returning: No response text found");
-                return;
-            }
-
-            console.log(
-                `Bot would respond to tweet ${selectedTweet.id} with: ${response.text}`
-            );
-            try {
-                const callback: HandlerCallback = async (response: Content) => {
-                    const memories = await sendTweet(
-                        this.client,
-                        response,
-                        message.roomId,
-                        this.twitterUsername,
-                        tweetId
-                    );
-                    return memories;
-                };
-
-                const responseMessages = await callback(responseContent);
-
-                state = await this.runtime.updateRecentMessageState(state);
-
-                for (const responseMessage of responseMessages) {
-                    await this.runtime.messageManager.createMemory(
-                        responseMessage,
-                        false
-                    );
+                if (!response.text) {
+                    console.log("Returning: No response text found");
+                    return;
                 }
 
-                state = await this.runtime.updateRecentMessageState(state);
-
-                await this.runtime.evaluate(message, state);
-
-                await this.runtime.processActions(
-                    message,
-                    responseMessages,
-                    state,
-                    callback
+                console.log(
+                    `Bot would respond to tweet ${selectedTweet.id} with: ${response.text}`
                 );
+                try {
+                    const callback: HandlerCallback = async (response: Content) => {
+                        const memories = await sendTweet(
+                            this.client,
+                            response,
+                            message.roomId,
+                            this.twitterUsername,
+                            tweetId
+                        );
+                        return memories;
+                    };
 
-                this.respondedTweets.add(selectedTweet.id);
-                const responseInfo = `Context:\n\n${context}\n\nSelected Post: ${selectedTweet.id} - ${selectedTweet.username}: ${selectedTweet.text}\nAgent's Output:\n${response.text}`;
+                    const responseMessages = await callback(responseContent);
 
-                await this.runtime.cacheManager.set(
-                    `twitter/tweet_generation_${selectedTweet.id}.txt`,
-                    responseInfo
-                );
+                    state = await this.runtime.updateRecentMessageState(state);
 
-                await wait();
-            } catch (error) {
-                console.error(`Error sending response post: ${error}`);
+                    for (const responseMessage of responseMessages) {
+                        await this.runtime.messageManager.createMemory(
+                            responseMessage,
+                            false
+                        );
+                    }
+
+                    state = await this.runtime.updateRecentMessageState(state);
+
+                    await this.runtime.evaluate(message, state);
+
+                    await this.runtime.processActions(
+                        message,
+                        responseMessages,
+                        state,
+                        callback
+                    );
+
+                    this.respondedTweets.add(selectedTweet.id);
+                    const responseInfo = `Context:\n\n${context}\n\nSelected Post: ${selectedTweet.id} - ${selectedTweet.username}: ${selectedTweet.text}\nAgent's Output:\n${response.text}`;
+
+                    await this.runtime.cacheManager.set(
+                        `twitter/tweet_generation_${selectedTweet.id}.txt`,
+                        responseInfo
+                    );
+
+                    await wait();
+                } catch (error) {
+                    console.error(`Error sending response post: ${error}`);
+                }
             }
         } catch (error) {
             console.error("Error engaging with search terms:", error);
