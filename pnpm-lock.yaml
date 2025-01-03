@@ -150,6 +150,9 @@ importers:
       '@elizaos/plugin-bootstrap':
         specifier: workspace:*
         version: link:../packages/plugin-bootstrap
+      '@elizaos/plugin-web-search':
+        specifier: workspace:*
+        version: link:../packages/plugin-web-search
       '@elizaos/plugin-coinbase':
         specifier: workspace:*
         version: link:../packages/plugin-coinbase
